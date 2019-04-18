@@ -1,0 +1,46 @@
+#include<unistd.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+#include<stdlib.h>
+#include<stdio.h>
+int main()
+{
+    int a,b;
+    struct flock yo,yoo;
+    a=open("myfile22",O_CREAT|O_RDWR,0666);
+    yo.l_type=F_WRLCK;
+    yo.l_whence=SEEK_SET;
+    yo.l_start=40;
+    yo.l_len=20;
+    b=fcntl(a,F_SETLK,&yo);
+    if(b==-1)
+    {
+        printf("There is error in locking region 1 in process_2\n");
+        
+    }
+    else
+    {
+        printf("Rescource_allocated_1 in proces_2 40- 60\n");
+        
+    }sleep(5);
+    yoo.l_type=F_WRLCK;
+    yoo.l_whence=SEEK_SET;
+    yoo.l_start=10;
+    yoo.l_len=20;
+    b=-1;
+    while(b==-1)
+    {
+        b=fcntl(a,F_SETLK,&yoo);
+        if(b==-1)
+        {
+            printf("Waiting for resources(10-30) in Process_2 \n"); sleep(3);
+            
+        }
+        else
+        {
+            printf("Region_2_Locked in Process_2 10 - 30\n");
+            
+        }
+    }
+    sleep(20);
+}
